@@ -1,0 +1,3 @@
+/home/art/labs/lab1/3/build/CMakeFiles/sys-info-crossplatform.dir
+/home/art/labs/lab1/3/build/CMakeFiles/edit_cache.dir
+/home/art/labs/lab1/3/build/CMakeFiles/rebuild_cache.dir
