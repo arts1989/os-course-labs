@@ -5,12 +5,18 @@
 #if defined(PLATFORM_POSIX) || defined(__linux__)
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
+#include "unix-info.h"
 #elif defined(_WIN32)
 #include <VersionHelpers.h>
-#include <windows.h>
+#include "wind-info.h"
 #else
-static_assert(false, "unrecognized platform");
+#error unrecognized platform // директива error ++
 #endif
+
+// более читабельный ++
+// поправить обработку ошибки ++
+// посмотреть лекции про исключения с канала про ООП
+// гаранития безопасности исключений (строгая т др
 
 class SysInfo
 {
@@ -21,6 +27,7 @@ public:
 	uint64_t GetTotalMemory() const;
 	unsigned GetProcessorCount() const;
 };
+
 
 std::string SysInfo::GetOSName() const
 {

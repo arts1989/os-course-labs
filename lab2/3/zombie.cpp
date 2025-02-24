@@ -3,23 +3,26 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types>
+#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
+// выяснить в каком случае процесс зомби ++
+
 int main(int argc, char* argv[])
 {
-	int status, enteredPID;
-	pid_t pid;
+	pid_t pid = fork();
 
-	pid = fork();
 	if (pid == 0)
 	{
+		// child
 		std::cout << "Child PID: " << getpid() << std::endl;
-		exit(EXIT_SUCCESS);
+		return EXIT_SUCCESS; // не использовать ext ++
 	}
 	else
 	{
+		// parent
+		int enteredPID;
 		std::cout << "Enter child PID: " << std::endl;
 		std::cin >> enteredPID;
 
@@ -31,11 +34,12 @@ int main(int argc, char* argv[])
 			std::cin >> enteredPID;
 		}
 
-		if (WEXITSTATUS(status))
-		{
-			std::cout << "Child PID " << pid << " exited normally " << std::endl;
-		}
+		int state;
+		pid_t child_pid = waitpid(pid, &state, 0);
 
-		exit(EXIT_SUCCESS);
+		std::cout << "Child PID " << child_pid << " exited normally " << std::endl;
+		std::cout << "Exit status: " << WEXITSTATUS(state) << std::endl;
+
+		return EXIT_SUCCESS;
 	}
 }

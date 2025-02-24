@@ -15,7 +15,7 @@
 #include <VersionHelpers.h>
 #include <windows.h>
 #else
-static_assert(false, "unrecognized platform");
+#error unrecognized platform
 #endif
 
 using namespace std::chrono_literals;
@@ -49,7 +49,7 @@ int main()
 			std::filesystem::remove(FILE_NAME);
 			std::cout << "file " << FILE_NAME << " removed" << std::endl;
 			std::cout << "Done" << std::endl;
-			exit(1);
+			return 1;
 		}
 		std::cout << counter << std::endl;
 		counter++;

@@ -36,7 +36,7 @@ int main()
 			{
 			case -1:
 				std::cout << "Error create process" << std::endl;
-				exit(EXIT_FAILURE);
+				return EXIT_FAILURE;
 			case 0:
 				while (true)
 				{
@@ -68,7 +68,7 @@ int main()
 			{
 				kill(spawnedPID, SIGTERM);
 			}
-			exit(EXIT_SUCCESS);
+			return EXIT_SUCCESS;
 		}
 	}
 }

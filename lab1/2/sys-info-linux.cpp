@@ -6,14 +6,18 @@
 
 int main()
 {
-	struct utsname name;
+
+	utsname name; // стракт необязательно ++
 	if (uname(&name))
-		exit(-1);
+		return 1; // не грейсфул шутдаун, лучше return  ++
 
 	printf("OS: %s %s\n", name.sysname, name.release);
 
 	struct sysinfo memoryInfo;
-	sysinfo(&memoryInfo);
+	auto err = sysinfo(&memoryInfo); // проверять ошибки  ++
+	if (err != 0) {
+		return 1;
+	}
 
 	auto freeMemory = memoryInfo.freeram / (1024 * 1024);
 	auto totalMemory = memoryInfo.totalram / (1024 * 1024);

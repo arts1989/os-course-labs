@@ -14,6 +14,8 @@ struct ProcessInfo
 	SIZE_T memUsage;
 };
 
+// не нужно объявлять функции заголовочного файла
+/*
 BOOL EnumProcesses(
 	DWORD* lpidProcess,
 	DWORD cb,
@@ -23,16 +25,16 @@ BOOL GetProcessMemoryInfo(
 	HANDLE Process,
 	PPROCESS_MEMORY_COUNTERS ppsmemCounters,
 	DWORD cb);
+*/
 
 vector<ProcessInfo> listProcessIDs()
 {
 	vector<ProcessInfo> processInfo;
-
 	DWORD processIDs[1024], bytes;
 
 	BOOL processList = EnumProcesses(processIDs, sizeof(processIDs), &bytes);
 	if (!processList)
-		throw "EnumProcesses fails";
+		throw "EnumProcesses error";
 
 	for (DWORD i = 0; i < bytes / sizeof(DWORD); i++)
 	{
@@ -49,10 +51,11 @@ vector<ProcessInfo> listProcessIDs()
 
 			TCHAR Buffer[MAX_PATH];
 			GetModuleFileNameEx(hProcess, 0, Buffer, MAX_PATH);
-
-			processInfo.insert(processInfo.begin(), ProcessInfo{ processIDs[i], string(Buffer), pmc.WorkingSetSize });
+			// push back
+			processInfo.push_back(processInfo.begin(), ProcessInfo{ processIDs[i], string(Buffer), pmc.WorkingSetSize });
 		}
-
+		// создать оборкту RAII если блок выше упадет и
+		// чтобы хендлеры не утекали (RAII)c
 		CloseHandle(hProcess);
 	}
 
@@ -72,9 +75,9 @@ int main()
 			cout << info.PID << "\t" << info.memUsage << "\t" << info.fileName << endl;
 		}
 	}
-	catch (const char* err)
+	catch (const std::string& error_message)
 	{
-		cout << err << endl;
+		cout << error_message << endl;
 	}
 
 	return EXIT_SUCCESS;
